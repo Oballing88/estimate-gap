@@ -1,11 +1,12 @@
 """Deterministic gap-rule engine. Rules are data (JSON); the engine only reads estimates
 and returns Flags for an estimator to accept or dismiss. It never edits an estimate."""
+
 from __future__ import annotations
 
 import json
+from collections.abc import Callable
 from importlib import resources
 from pathlib import Path
-from typing import Callable
 
 from .diff import diff
 from .model import Estimate, Flag, Line, Match
@@ -16,7 +17,9 @@ RULE_TYPES = ("missing_operation", "hours_delta", "refinish_missing", "not_inclu
 
 def load_rules(path: str | Path | None = None) -> list[dict]:
     if path is None:
-        text = resources.files("estimate_gap").joinpath("rules/default_rules.json").read_text("utf-8")
+        text = (
+            resources.files("estimate_gap").joinpath("rules/default_rules.json").read_text("utf-8")
+        )
     else:
         text = Path(path).read_text(encoding="utf-8")
     rules = json.loads(text)["rules"]
@@ -40,7 +43,9 @@ def _line_matches(line: Line, cond: dict, anchor: Line | None = None) -> bool:
         return False
     if "part_area" in cond and line.part_area != norm_part(cond["part_area"]):
         return False
-    if "part_area_in" in cond and line.part_area not in {norm_part(p) for p in cond["part_area_in"]}:
+    if "part_area_in" in cond and line.part_area not in {
+        norm_part(p) for p in cond["part_area_in"]
+    }:
         return False
     if "desc_contains" in cond and cond["desc_contains"].lower() not in line.desc.lower():
         return False
@@ -54,9 +59,13 @@ def _missing_operation(rule, ref, target, matches):
     for m in matches:
         r = m.ref_line
         if r and m.target_line is None and not r.included_in_parent and (not ops or r.op in ops):
-            yield Flag(rule["id"], "missing_in_target",
-                       f"{r.op} {r.part_area} ({r.side}) is on reference line {r.line_no} but not on the target.",
-                       ref_line=r.line_no, hours_hint=r.hours)
+            yield Flag(
+                rule["id"],
+                "missing_in_target",
+                f"{r.op} {r.part_area} ({r.side}) is on reference line {r.line_no} but not on the target.",
+                ref_line=r.line_no,
+                hours_hint=r.hours,
+            )
 
 
 def _hours_delta(rule, ref, target, matches):
@@ -67,9 +76,14 @@ def _hours_delta(rule, ref, target, matches):
             for attr in ("hours", "refinish_hours"):
                 delta = round(getattr(t, attr) - getattr(r, attr), 2)
                 if abs(delta) > threshold:
-                    yield Flag(rule["id"], "hours_delta",
-                               f"{r.op} {r.part_area} ({r.side}) {attr}: reference {getattr(r, attr)} vs target {getattr(t, attr)} ({delta:+}).",
-                               ref_line=r.line_no, target_line=t.line_no, hours_hint=max(0.0, -delta))
+                    yield Flag(
+                        rule["id"],
+                        "hours_delta",
+                        f"{r.op} {r.part_area} ({r.side}) {attr}: reference {getattr(r, attr)} vs target {getattr(t, attr)} ({delta:+}).",
+                        ref_line=r.line_no,
+                        target_line=t.line_no,
+                        hours_hint=max(0.0, -delta),
+                    )
 
 
 def _refinish_missing(rule, ref, target, matches):
@@ -77,12 +91,17 @@ def _refinish_missing(rule, ref, target, matches):
     for t in target.lines:
         if t.op != "R&R" or (panels and t.part_area not in panels) or t.refinish_hours > 0:
             continue
-        has_refinish = any(o.op == "refinish" and o.part_area == t.part_area and o.side == t.side
-                           for o in target.lines)
+        has_refinish = any(
+            o.op == "refinish" and o.part_area == t.part_area and o.side == t.side
+            for o in target.lines
+        )
         if not has_refinish:
-            yield Flag(rule["id"], "refinish_missing",
-                       f"Replaced panel {t.part_area} ({t.side}) on target line {t.line_no} has no refinish.",
-                       target_line=t.line_no)
+            yield Flag(
+                rule["id"],
+                "refinish_missing",
+                f"Replaced panel {t.part_area} ({t.side}) on target line {t.line_no} has no refinish.",
+                target_line=t.line_no,
+            )
 
 
 def _not_included_op(rule, ref, target, matches):
@@ -92,9 +111,14 @@ def _not_included_op(rule, ref, target, matches):
         if not any(_line_matches(o, rule["expect"], anchor=t) for o in target.lines if o is not t):
             exp = rule["expect"]
             label = " ".join(str(exp[k]) for k in ("op", "part_area", "desc_contains") if k in exp)
-            yield Flag(rule["id"], "not_included_op",
-                       rule.get("message") or f"Target line {t.line_no} ({t.op} {t.part_area}) has no '{label}' line.",
-                       target_line=t.line_no, hours_hint=float(rule.get("hours_hint", 0.0)))
+            yield Flag(
+                rule["id"],
+                "not_included_op",
+                rule.get("message")
+                or f"Target line {t.line_no} ({t.op} {t.part_area}) has no '{label}' line.",
+                target_line=t.line_no,
+                hours_hint=float(rule.get("hours_hint", 0.0)),
+            )
 
 
 _HANDLERS: dict[str, Callable] = {

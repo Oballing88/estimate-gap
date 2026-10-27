@@ -13,7 +13,7 @@ Status: early (v0.1.0). Inputs are a simple JSON/CSV format. Real export formats
 ## What it isn't
 - It does not change any estimate or write to CCC ONE, Mitchell or any other system. It only reads files and prints a report.
 - It is not a source of labor times or procedures. It ships no MOTOR, CCC or Mitchell data or text. The example rules are generic and written from scratch, so check them against your own references before relying on them.
-- It is not affiliated with, endorsed by or sponsored by CCC Intelligent Solutions, Mitchell International or MOTOR Information Systems. Those names are trademarks of their owners. "Mitchell-style" and "CCC-style" here only name the two sides of a comparison.
+- It is not affiliated with, endorsed by or sponsored by CCC Intelligent Solutions, Mitchell International or MOTOR Information Systems. Those names are trademarks of their owners. The sample files are named "estimate A" and "estimate B" and contain no vendor names.
 - It does not give repair, legal or insurance advice.
 
 ## Install
@@ -27,7 +27,7 @@ pytest
 
 ## Quickstart
 ```bash
-estimate-gap compare samples/mitchell_style_synthetic.json samples/ccc_style_synthetic.json
+estimate-gap compare samples/estimate_a_synthetic.json samples/estimate_b_synthetic.json
 estimate-gap compare a.json b.json --format json
 estimate-gap compare a.json b.csv --rules my_rules.json
 ```

@@ -9,11 +9,18 @@ from .rules import load_rules, run_rules
 
 
 def main(argv: list[str] | None = None) -> int:
-    p = argparse.ArgumentParser(prog="estimate-gap", description="Read-only gap check between two estimates.")
+    p = argparse.ArgumentParser(
+        prog="estimate-gap", description="Read-only gap check between two estimates."
+    )
     sub = p.add_subparsers(dest="cmd", required=True)
     c = sub.add_parser("compare", help="compare a reference estimate (a) to a target estimate (b)")
-    c.add_argument("a", help="reference estimate, e.g. a Mitchell-style export (.json or .csv)")
-    c.add_argument("b", help="target estimate, e.g. a CCC-style export (.json or .csv)")
+    c.add_argument(
+        "a",
+        help="reference estimate, e.g. a file exported from one estimating system (.json or .csv)",
+    )
+    c.add_argument(
+        "b", help="target estimate, e.g. a file exported from another system (.json or .csv)"
+    )
     c.add_argument("--rules", help="path to a rules JSON file (default: built-in examples)")
     c.add_argument("--format", choices=["text", "json"], default="text")
     args = p.parse_args(argv)

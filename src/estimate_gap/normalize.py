@@ -1,20 +1,36 @@
 """Normalize raw line dicts into model objects."""
+
 from __future__ import annotations
 
 import re
-from typing import Any, Iterable
+from collections.abc import Iterable
+from typing import Any
 
 from .model import Estimate, Line
 
 _OP_ALIASES = {
-    "r&i": "R&I", "r/i": "R&I", "remove and install": "R&I", "remove/install": "R&I",
-    "r&r": "R&R", "r/r": "R&R", "replace": "R&R", "remove and replace": "R&R",
-    "remove/replace": "R&R", "repl": "R&R",
-    "repair": "repair", "rpr": "repair",
-    "refinish": "refinish", "refn": "refinish", "rfn": "refinish", "paint": "refinish",
-    "blend": "blend", "blnd": "blend",
-    "sublet": "sublet", "subl": "sublet",
-    "materials": "materials", "mat": "materials",
+    "r&i": "R&I",
+    "r/i": "R&I",
+    "remove and install": "R&I",
+    "remove/install": "R&I",
+    "r&r": "R&R",
+    "r/r": "R&R",
+    "replace": "R&R",
+    "remove and replace": "R&R",
+    "remove/replace": "R&R",
+    "repl": "R&R",
+    "repair": "repair",
+    "rpr": "repair",
+    "refinish": "refinish",
+    "refn": "refinish",
+    "rfn": "refinish",
+    "paint": "refinish",
+    "blend": "blend",
+    "blnd": "blend",
+    "sublet": "sublet",
+    "subl": "sublet",
+    "materials": "materials",
+    "mat": "materials",
 }
 _SIDE_ALIASES = {"l": "L", "lt": "L", "left": "L", "r": "R", "rt": "R", "right": "R"}
 _TRUE = {"true", "yes", "y", "1", "incl", "included"}
@@ -64,6 +80,10 @@ def normalize_line(raw: dict, default_no: int) -> Line:
     )
 
 
-def normalize_estimate(est_id: str, source: str, raw_lines: Iterable[dict], synthetic: bool = True) -> Estimate:
+def normalize_estimate(
+    est_id: str, source: str, raw_lines: Iterable[dict], synthetic: bool = True
+) -> Estimate:
     lines = tuple(normalize_line(r, i) for i, r in enumerate(raw_lines, start=1))
-    return Estimate(id=str(est_id), source=str(source or "other"), lines=lines, synthetic=bool(synthetic))
+    return Estimate(
+        id=str(est_id), source=str(source or "other"), lines=lines, synthetic=bool(synthetic)
+    )

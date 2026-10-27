@@ -1,8 +1,8 @@
 """Normalized data model. All objects are frozen: nothing here mutates an estimate."""
+
 from __future__ import annotations
 
-from dataclasses import dataclass, field, replace
-from typing import Optional
+from dataclasses import dataclass, replace
 
 OPS = ("R&I", "R&R", "repair", "refinish", "blend", "sublet", "materials", "other")
 SIDES = ("L", "R", "na")
@@ -28,15 +28,15 @@ class Line:
 @dataclass(frozen=True)
 class Estimate:
     id: str
-    source: str  # e.g. "mitchell-style", "ccc-style", "other"
+    source: str  # e.g. "estimate-a", "estimate-b", "other"
     lines: tuple[Line, ...] = ()
     synthetic: bool = True
 
 
 @dataclass(frozen=True)
 class Match:
-    ref_line: Optional[Line]
-    target_line: Optional[Line]
+    ref_line: Line | None
+    target_line: Line | None
 
 
 @dataclass(frozen=True)
@@ -44,16 +44,16 @@ class Flag:
     rule_id: str
     kind: str
     message: str
-    ref_line: Optional[int] = None
-    target_line: Optional[int] = None
+    ref_line: int | None = None
+    target_line: int | None = None
     hours_hint: float = 0.0
     status: str = "open"  # open | accepted | dismissed
     dismiss_reason: str = ""
 
-    def accept(self) -> "Flag":
+    def accept(self) -> Flag:
         return replace(self, status="accepted", dismiss_reason="")
 
-    def dismiss(self, reason: str) -> "Flag":
+    def dismiss(self, reason: str) -> Flag:
         if not reason:
             raise ValueError("a dismiss reason is required")
         return replace(self, status="dismissed", dismiss_reason=reason)

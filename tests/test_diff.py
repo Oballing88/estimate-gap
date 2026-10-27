@@ -3,8 +3,14 @@ from estimate_gap.normalize import normalize_estimate
 
 
 def test_diff_matches_unmatched_and_extra():
-    a = normalize_estimate("a", "ref", [{"op": "R&R", "part_area": "hood"}, {"op": "R&I", "part_area": "grille"}])
-    b = normalize_estimate("b", "tgt", [{"op": "Repl", "part_area": "Hood"}, {"op": "blend", "part_area": "fender", "side": "L"}])
+    a = normalize_estimate(
+        "a", "ref", [{"op": "R&R", "part_area": "hood"}, {"op": "R&I", "part_area": "grille"}]
+    )
+    b = normalize_estimate(
+        "b",
+        "tgt",
+        [{"op": "Repl", "part_area": "Hood"}, {"op": "blend", "part_area": "fender", "side": "L"}],
+    )
     m = diff(a, b)
     assert len(m) == 3
     assert m[0].ref_line and m[0].target_line

@@ -1,7 +1,7 @@
 {
   "_notice": "SYNTHETIC SAMPLE. Fictional vehicle, made-up lines and hours. Not real shop, customer, insurer, or vendor data.",
   "id": "SYNTH-1042-A",
-  "source": "mitchell-style",
+  "source": "estimate-a",
   "synthetic": true,
   "vehicle": {"year": 2020, "make": "Fictional", "model": "Example SUV", "vin": "FAKEVIN0000000000"},
   "lines": [

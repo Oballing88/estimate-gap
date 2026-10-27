@@ -1,10 +1,26 @@
 import pytest
 
-from estimate_gap.normalize import norm_bool, norm_hours, norm_op, norm_part, norm_side, normalize_line
+from estimate_gap.normalize import (
+    norm_bool,
+    norm_hours,
+    norm_op,
+    norm_part,
+    norm_side,
+    normalize_line,
+)
 
 
-@pytest.mark.parametrize("raw,expected", [("Repl", "R&R"), ("R/I", "R&I"), ("rfn", "refinish"),
-                                          ("Blnd", "blend"), ("RPR", "repair"), ("???", "other")])
+@pytest.mark.parametrize(
+    "raw,expected",
+    [
+        ("Repl", "R&R"),
+        ("R/I", "R&I"),
+        ("rfn", "refinish"),
+        ("Blnd", "blend"),
+        ("RPR", "repair"),
+        ("???", "other"),
+    ],
+)
 def test_norm_op(raw, expected):
     assert norm_op(raw) == expected
 

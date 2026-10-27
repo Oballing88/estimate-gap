@@ -6,20 +6,20 @@ from estimate_gap.parsers import load, parse_csv, parse_json
 
 
 def test_parse_json_sample(samples):
-    est = parse_json(samples / "mitchell_style_synthetic.json")
-    assert est.id == "SYNTH-1042-A" and est.source == "mitchell-style" and est.synthetic
+    est = parse_json(samples / "estimate_a_synthetic.json")
+    assert est.id == "SYNTH-1042-A" and est.source == "estimate-a" and est.synthetic
     assert len(est.lines) == 6
     assert est.lines[0].op == "R&R"
 
 
 def test_parse_csv_sample(samples):
-    est = parse_csv(samples / "ccc_style_synthetic.csv", source="ccc-style")
+    est = parse_csv(samples / "estimate_b_synthetic.csv", source="estimate-b")
     assert len(est.lines) == 3
     assert est.lines[2].side == "L" and est.lines[2].op == "R&R"
 
 
 def test_load_dispatch_and_errors(tmp_path, samples):
-    assert load(samples / "ccc_style_synthetic.json").id == "SYNTH-1042-B"
+    assert load(samples / "estimate_b_synthetic.json").id == "SYNTH-1042-B"
     with pytest.raises(ValueError):
         load(tmp_path / "x.txt")
     bad = tmp_path / "bad.json"

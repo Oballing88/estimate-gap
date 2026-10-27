@@ -1,4 +1,5 @@
 """Parsers for the simple synthetic JSON and CSV estimate formats (see docs in README)."""
+
 from __future__ import annotations
 
 import csv
@@ -13,8 +14,12 @@ def parse_json(path: str | Path) -> Estimate:
     data = json.loads(Path(path).read_text(encoding="utf-8"))
     if "lines" not in data:
         raise ValueError(f"{path}: missing 'lines'")
-    return normalize_estimate(data.get("id", Path(path).stem), data.get("source", "other"),
-                              data["lines"], data.get("synthetic", True))
+    return normalize_estimate(
+        data.get("id", Path(path).stem),
+        data.get("source", "other"),
+        data["lines"],
+        data.get("synthetic", True),
+    )
 
 
 def parse_csv(path: str | Path, est_id: str | None = None, source: str = "other") -> Estimate:
