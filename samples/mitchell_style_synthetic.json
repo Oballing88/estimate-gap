@@ -1,0 +1,15 @@
+{
+  "_notice": "SYNTHETIC SAMPLE. Fictional vehicle, made-up lines and hours. Not real shop, customer, insurer, or vendor data.",
+  "id": "SYNTH-1042-A",
+  "source": "mitchell-style",
+  "synthetic": true,
+  "vehicle": {"year": 2020, "make": "Fictional", "model": "Example SUV", "vin": "FAKEVIN0000000000"},
+  "lines": [
+    {"line_no": 1, "op": "R&R", "part_area": "front bumper cover", "desc": "Front bumper cover (example)", "hours": 1.5, "refinish_hours": 2.0},
+    {"line_no": 2, "op": "R&I", "part_area": "parking sensors", "desc": "Parking sensors x4 (example)", "hours": 0.8},
+    {"line_no": 3, "op": "refinish", "part_area": "front bumper cover", "desc": "Refinish bumper, adhesion promoter included", "hours": 0, "refinish_hours": 2.0, "labor_type": "refinish"},
+    {"line_no": 4, "op": "R&R", "part_area": "fender", "side": "L", "desc": "LT fender (example)", "hours": 2.0, "refinish_hours": 1.8},
+    {"line_no": 5, "op": "blend", "part_area": "front door", "side": "L", "desc": "LT front door blend", "hours": 1.2, "labor_type": "refinish"},
+    {"line_no": 6, "op": "R&R", "part_area": "quarter panel", "side": "R", "desc": "RT quarter panel (example)", "hours": 9.0, "refinish_hours": 2.5}
+  ]
+}

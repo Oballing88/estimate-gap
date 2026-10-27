@@ -1,0 +1,19 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+.env
+.env.*
+*.pem
+*.key
+# never commit real estimates
+real/
+private/
+*.ems
+*.pdf

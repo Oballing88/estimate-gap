@@ -1,0 +1,11 @@
+{
+  "_note": "Generic example rules written from scratch for demonstration. Not vendor data. Tune or replace with your own references.",
+  "rules": [
+    {"id": "EX-001", "type": "missing_operation", "description": "An operation on the reference estimate has no matching line on the target."},
+    {"id": "EX-002", "type": "hours_delta", "threshold": 0.3, "description": "Matched line whose labor or refinish hours differ by more than the threshold."},
+    {"id": "EX-003", "type": "refinish_missing", "panels": ["fender", "front door", "rear door", "hood", "quarter panel", "front bumper cover", "rear bumper cover"], "description": "A replaced exterior panel has no refinish line or refinish hours."},
+    {"id": "EX-004", "type": "not_included_op", "when": {"op": "R&R", "part_area": "quarter panel"}, "expect": {"desc_contains": "corrosion protection"}, "hours_hint": 0.5, "description": "Welded panel replacement without a corrosion protection line."},
+    {"id": "EX-005", "type": "not_included_op", "when": {"op": "refinish", "part_area": "fender"}, "expect": {"op": "blend", "part_area": "front door", "side": "same"}, "description": "Refinished fender without a blend on the adjacent door."},
+    {"id": "EX-006", "type": "not_included_op", "when": {"op": "refinish", "part_area_in": ["front bumper cover", "rear bumper cover"]}, "expect": {"desc_contains": "adhesion promoter"}, "hours_hint": 0.3, "description": "Plastic bumper refinish without an adhesion promoter line."}
+  ]
+}

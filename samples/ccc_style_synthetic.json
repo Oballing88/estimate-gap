@@ -1,0 +1,14 @@
+{
+  "_notice": "SYNTHETIC SAMPLE. Fictional vehicle, made-up lines and hours. Not real shop, customer, insurer, or vendor data.",
+  "id": "SYNTH-1042-B",
+  "source": "ccc-style",
+  "synthetic": true,
+  "vehicle": {"year": 2020, "make": "Fictional", "model": "Example SUV", "vin": "FAKEVIN0000000000"},
+  "lines": [
+    {"line_no": 1, "op": "Repl", "part_area": "Front Bumper Cover", "desc": "Front bumper cover (example)", "hours": "1.5", "refinish_hours": "2.0"},
+    {"line_no": 2, "op": "Refn", "part_area": "front bumper cover", "desc": "Refinish bumper", "hours": 0, "refinish_hours": 2.0, "labor_type": "refinish"},
+    {"line_no": 3, "op": "Repl", "part_area": "fender", "side": "LT", "desc": "LT fender (example)", "hours": 2.0, "refinish_hours": 0},
+    {"line_no": 4, "op": "Blnd", "part_area": "front door", "side": "LT", "desc": "LT front door blend", "hours": 0.8, "labor_type": "refinish"},
+    {"line_no": 5, "op": "Repl", "part_area": "quarter panel", "side": "RT", "desc": "RT quarter panel (example)", "hours": 9.0, "refinish_hours": 2.5}
+  ]
+}

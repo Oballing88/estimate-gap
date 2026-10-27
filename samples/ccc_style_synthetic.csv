@@ -1,0 +1,4 @@
+line_no,op,part_area,side,desc,hours,refinish_hours,labor_type,included_in_parent
+1,Repl,Front Bumper Cover,,SYNTHETIC example line,1.5,2.0,body,no
+2,Refn,front bumper cover,,SYNTHETIC example line,0,2.0,refinish,no
+3,Repl,fender,LT,SYNTHETIC example line,2.0,0,body,no
