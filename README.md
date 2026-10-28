@@ -4,6 +4,32 @@ A small, read-only tool that compares two collision repair estimates for the sam
 
 Status: early (v0.1.0). Inputs are a simple JSON/CSV format. Real export formats are not supported yet.
 
+## For collision estimators
+**What it does.** You give it two estimates for the same job (for example, your estimate and a second one you want to check against). It compares them line by line and flags things worth a second look:
+- an operation that is on one estimate but not the other,
+- labor hours that differ by more than a set amount (0.3 h by default),
+- a replaced panel with no refinish on it,
+- companion operations that are commonly forgotten (the built-in examples include corrosion protection and adhesion promoter).
+
+Each flag is a suggestion. You accept it or dismiss it. The tool decides nothing.
+
+**What it doesn't do.**
+- It does not change anything in your estimating system. It only reads files and prints a report.
+- It is not affiliated with or endorsed by any estimating or data vendor.
+- It ships with synthetic sample estimates only. There are no real jobs, customers or vendor data in this repo.
+- It is early (v0.1.0). It reads a simple JSON/CSV format, not your system's native export, and the example rules are generic starting points. Check them against your own references.
+
+**Try it in 2 minutes.** You need Python 3.10 or newer.
+```bash
+git clone https://github.com/Oballing88/estimate-gap && cd estimate-gap
+python -m venv .venv && . .venv/bin/activate
+pip install -e .
+estimate-gap compare samples/estimate_a_synthetic.json samples/estimate_b_synthetic.json
+```
+You should see 6 flags on the sample pair.
+
+**Suggest a rule.** Tell us what your estimators catch by hand, in your own words. Use the [rule proposal form](https://github.com/Oballing88/estimate-gap/issues/new?template=rule_proposal.md). Please don't paste labor times, procedure text or op codes from any vendor, and don't post real estimates or customer details.
+
 ## What it is
 - A parser for a simple JSON or CSV estimate format, plus a normalizer for operation names (e.g. `Repl` → `R&R`), sides, part names and hours.
 - A differ that matches lines on operation + part + side.
