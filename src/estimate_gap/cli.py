@@ -24,8 +24,17 @@ def main(argv: list[str] | None = None) -> int:
     c.add_argument("--rules", help="path to a rules JSON file (default: built-in examples)")
     c.add_argument("--format", choices=["text", "json"], default="text")
     args = p.parse_args(argv)
-    ref, target = load(args.a), load(args.b)
-    flags = run_rules(ref, target, load_rules(args.rules))
+    try:
+        ref, target = load(args.a), load(args.b)
+        flags = run_rules(ref, target, load_rules(args.rules))
+    except OSError as exc:
+        print(
+            f"error: cannot read {exc.filename or 'file'}: {exc.strerror or exc}", file=sys.stderr
+        )
+        return 2
+    except ValueError as exc:  # includes bad JSON/CSV, schema and rule errors
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
     print(to_json(ref, target, flags) if args.format == "json" else to_text(ref, target, flags))
     return 0
 

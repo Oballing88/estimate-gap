@@ -14,7 +14,7 @@ def test_parse_json_sample(samples):
 
 def test_parse_csv_sample(samples):
     est = parse_csv(samples / "estimate_b_synthetic.csv", source="estimate-b")
-    assert len(est.lines) == 3
+    assert len(est.lines) == 5
     assert est.lines[2].side == "L" and est.lines[2].op == "R&R"
 
 

@@ -22,13 +22,21 @@ def load_rules(path: str | Path | None = None) -> list[dict]:
         )
     else:
         text = Path(path).read_text(encoding="utf-8")
-    rules = json.loads(text)["rules"]
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"{path}: not valid JSON ({exc.msg}, line {exc.lineno})") from exc
+    if not isinstance(data, dict) or not isinstance(data.get("rules"), list):
+        raise ValueError(f"{path}: rules file must be an object with a 'rules' list")
+    rules = data["rules"]
     for r in rules:
         validate_rule(r)
     return rules
 
 
 def validate_rule(rule: dict) -> None:
+    if not isinstance(rule, dict):
+        raise ValueError(f"rule must be an object: {rule!r}")
     for key in ("id", "type"):
         if key not in rule:
             raise ValueError(f"rule missing '{key}': {rule}")
@@ -54,6 +62,12 @@ def _line_matches(line: Line, cond: dict, anchor: Line | None = None) -> bool:
     return True
 
 
+def _label(line: Line) -> str:
+    """Operation and part, plus the side only when there is one (no '(na)' noise)."""
+    side = "" if line.side == "na" else f" ({line.side})"
+    return f"{line.op} {line.part_area}{side}"
+
+
 def _missing_operation(rule, ref, target, matches):
     ops = {norm_op(o) for o in rule.get("ops", [])}
     for m in matches:
@@ -62,7 +76,7 @@ def _missing_operation(rule, ref, target, matches):
             yield Flag(
                 rule["id"],
                 "missing_in_target",
-                f"{r.op} {r.part_area} ({r.side}) is on reference line {r.line_no} but not on the target.",
+                f"{_label(r)} is on reference line {r.line_no} but not on the target.",
                 ref_line=r.line_no,
                 hours_hint=r.hours,
             )
@@ -79,7 +93,7 @@ def _hours_delta(rule, ref, target, matches):
                     yield Flag(
                         rule["id"],
                         "hours_delta",
-                        f"{r.op} {r.part_area} ({r.side}) {attr}: reference {getattr(r, attr)} vs target {getattr(t, attr)} ({delta:+}).",
+                        f"{_label(r)} {attr}: reference {getattr(r, attr)} vs target {getattr(t, attr)} ({delta:+}).",
                         ref_line=r.line_no,
                         target_line=t.line_no,
                         hours_hint=max(0.0, -delta),
@@ -99,7 +113,7 @@ def _refinish_missing(rule, ref, target, matches):
             yield Flag(
                 rule["id"],
                 "refinish_missing",
-                f"Replaced panel {t.part_area} ({t.side}) on target line {t.line_no} has no refinish.",
+                f"Replaced panel {t.part_area}{'' if t.side == 'na' else f' ({t.side})'} on target line {t.line_no} has no refinish.",
                 target_line=t.line_no,
             )
 

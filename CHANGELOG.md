@@ -6,6 +6,12 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ## [Unreleased]
 
+### Fixed
+- `samples/estimate_b_synthetic.csv` now holds the same five lines as the JSON sample, so both give the same 6 flags.
+- Bad input (missing file, bad JSON/CSV, schema errors, bad rules file) now prints a one-line error and exits with code 2 instead of a traceback.
+- An estimate with no lines, or a CSV with no `op` column (even with no rows), is rejected instead of producing a flood of "missing" flags.
+- A blank side is no longer printed as `(na)` in flag messages.
+
 ## [0.1.0] - Unreleased
 
 ### Added

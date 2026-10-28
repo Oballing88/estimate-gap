@@ -67,6 +67,10 @@ def norm_bool(value: Any) -> bool:
 
 
 def normalize_line(raw: dict, default_no: int) -> Line:
+    if not isinstance(raw, dict):
+        raise ValueError("each line must be an object with named fields")
+    if not str(raw.get("op") or "").strip():
+        raise ValueError("missing 'op'")
     return Line(
         line_no=int(raw.get("line_no") or default_no),
         op=norm_op(raw.get("op")),
@@ -83,7 +87,13 @@ def normalize_line(raw: dict, default_no: int) -> Line:
 def normalize_estimate(
     est_id: str, source: str, raw_lines: Iterable[dict], synthetic: bool = True
 ) -> Estimate:
-    lines = tuple(normalize_line(r, i) for i, r in enumerate(raw_lines, start=1))
+    built = []
+    for i, raw in enumerate(raw_lines, start=1):
+        try:
+            built.append(normalize_line(raw, i))
+        except (ValueError, TypeError) as exc:
+            raise ValueError(f"line {i}: {exc}") from exc
+    lines = tuple(built)
     return Estimate(
         id=str(est_id), source=str(source or "other"), lines=lines, synthetic=bool(synthetic)
     )

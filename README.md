@@ -57,7 +57,9 @@ estimate-gap compare samples/estimate_a_synthetic.json samples/estimate_b_synthe
 estimate-gap compare a.json b.json --format json
 estimate-gap compare a.json b.csv --rules my_rules.json
 ```
-`a` is the reference estimate and `b` is the target being checked. With the synthetic samples the tool reports 6 flags: a missing R&I, two hour differences, a replaced panel with no refinish, a missing corrosion protection line and a missing adhesion promoter line.
+`a` is the reference estimate and `b` is the target being checked. The CSV and JSON versions of sample B hold the same lines, so either pair gives the same result. With the synthetic samples the tool reports 6 flags: a missing R&I, two hour differences, a replaced panel with no refinish, a missing corrosion protection line and a missing adhesion promoter line.
+
+Bad input (a missing file, malformed JSON/CSV, a missing `op` column, a non-numeric hour, or an estimate with no lines) prints a one-line `error: ...` message to stderr and exits with code 2. Nothing is printed to stdout and nothing is changed. In messages, `line N` means the Nth line of the estimate.
 
 ## Input format
 JSON: `{"id": "...", "source": "...", "synthetic": true, "lines": [ ... ]}`. CSV uses one row per line with the same column names.
